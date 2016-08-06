@@ -1,4 +1,4 @@
-# user-bundle
+# UserBundle
 
 A [SonataUserBundle](https://github.com/sonata-project/SonataUserBundle) Extension.
 
