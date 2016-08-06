@@ -1,0 +1,34 @@
+{
+    "name": "bruery/user-bundle",
+    "type": "symfony-bundle",
+    "description": "SonataUserBundle Extension",
+    "keywords": ["symfony2", "SonataUserBundle Extension", "Bruery"],
+    "homepage": "https://bruery.github.io/user-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "viktore zara",
+            "email": "viktore.zara@gmail.com",
+            "homepage": "https://github.com/gzilt"
+        },
+        {
+            "name": "mell zamora",
+            "email": "mellzamora@outlook.com",
+            "homepage": "https://github.com/rmzamora"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "sonata-project/user-bundle": "^3.0",
+        "bruery/admin-bundle": "^1.0",
+        "bruery/doctrine-orm-admin-bundle": "^1.0"
+    },
+    "autoload": {
+        "psr-4": { "Bruery\\UserBundle\\": "" }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    }
+}
