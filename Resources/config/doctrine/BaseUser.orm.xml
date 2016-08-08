@@ -15,6 +15,6 @@
 
     <mapped-superclass name="Bruery\UserBundle\Entity\BaseUser">
         <field name="passwordChangedAt"    type="datetime"   column="password_changed_at" nullable="true"/>
-        <field name="middlename"           type="string"     column="middlename"          nullable="true" length="255"/>
+        <field name="middlename"           type="string"     column="middlename"          nullable="true" length="64"/>
     </mapped-superclass>
 </doctrine-mapping>
