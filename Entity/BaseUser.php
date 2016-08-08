@@ -14,6 +14,11 @@ use Sonata\UserBundle\Entity\BaseUser as AbstractedUser;
 
 class BaseUser extends AbstractedUser
 {
+    /**
+     * @var string
+     */
+    protected $middlename;
+
     protected $passwordChangedAt;
 
     /**
@@ -36,5 +41,21 @@ class BaseUser extends AbstractedUser
     {
         $this->setPasswordChangedAt(new \DateTime());
         return parent::setPlainPassword($password);
+    }
+
+    /**
+     * @param string $middlename
+     */
+    public function setMiddlename($middlename)
+    {
+        $this->middlename = $middlename;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMiddlename()
+    {
+        return $this->middlename;
     }
 }
