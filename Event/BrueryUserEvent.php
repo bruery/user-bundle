@@ -12,7 +12,7 @@ namespace Bruery\UserBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 
-class RzUserEvent extends Event
+class BrueryUserEvent extends Event
 {
     protected $user;
 

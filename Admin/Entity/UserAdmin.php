@@ -46,7 +46,7 @@ class UserAdmin extends BaseUserAdmin
 
         if ($this->isGranted('ROLE_ALLOWED_TO_SWITCH')) {
             $listMapper
-                ->add('impersonating', 'string', array('template' => 'SonataUserBundle:Admin:Field/impersonating.html.twig', 'footable'=>array('attr'=>array('data-breakpoints'=>array('all')))))
+                ->add('impersonating', 'string', array('template' => 'BrueryUserBundle:Admin:Field/impersonating.html.twig', 'footable'=>array('attr'=>array('data-breakpoints'=>array('all')))))
             ;
         }
     }
