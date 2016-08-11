@@ -21,8 +21,8 @@ class TemplateCompilerPass implements CompilerPassInterface
         $definition = $container->getDefinition('bruery_core.template_loader');
         $templates = $container->getParameter('bruery_user.templates');
         $bunldeTemplates = [];
-        foreach($templates as $key => $templates) {
-            if(is_array($templates)) {
+        foreach ($templates as $key => $templates) {
+            if (is_array($templates)) {
                 foreach ($templates as $id=>$template) {
                     $bunldeTemplates[sprintf('bruery_user.template.%s.%s', $key, $id)] = $template;
                 }
