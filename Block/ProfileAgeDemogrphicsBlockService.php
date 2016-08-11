@@ -103,7 +103,7 @@ class ProfileAgeDemogrphicsBlockService extends BaseBlockService
      */
     public function load(BlockInterface $block)
     {
-        $ageBrackets = $this->collectionManager->findBy(array('context'=>$this->context, 'enabled'=>true));
+        $ageBrackets = $this->collectionManager->findByContext($this->context);
         $ageBracket = $this->manager->fetchAgeBracketCount();
         $dataAgeBracketList = [];
         $dataAgeBracketChart  = [];
