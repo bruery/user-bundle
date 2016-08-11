@@ -1,11 +1,11 @@
-# UserBundle
+# FormatterBundle
 
-A [SonataUserBundle](https://github.com/sonata-project/SonataUserBundle) Extension.
+A [SonataFormatterBundle](https://github.com/sonata-project/SonataFormatterBundle) Extension.
 
 
 ## Documentation
 
-Check out the documentation on the bundles [wiki page](https://github.com/bruery/user-bundle/wiki).
+Check out the documentation on the bundles [wiki page](https://github.com/bruery/formatter-bundle/wiki).
 
 ## Support
 
