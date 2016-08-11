@@ -1,9 +1,9 @@
 {
-    "name": "bruery/formatter-bundle",
+    "name": "bruery/user-bundle",
     "type": "symfony-bundle",
-    "description": "SonataFormatterBundle Extension",
-    "keywords": ["symfony2", "SonataFormatterBundle Extension", "Bruery"],
-    "homepage": "https://bruery.github.io/formatter-bundle",
+    "description": "SonataUserBundle Extension",
+    "keywords": ["symfony2", "SonataUserBundle Extension", "Bruery"],
+    "homepage": "https://bruery.github.io/user-bundle",
     "license": "MIT",
     "authors": [
         {
@@ -19,11 +19,12 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "sonata-project/formatter-bundle": "^3.0",
-        "bruery/block-bundle": "^1.0"
+        "sonata-project/user-bundle": "^3.0",
+        "bruery/admin-bundle": "^1.0",
+        "bruery/doctrine-orm-admin-bundle": "^1.0"
     },
     "autoload": {
-        "psr-4": { "Bruery\\FormatterBundle\\": "" }
+        "psr-4": { "Bruery\\UserBundle\\": "" }
     },
     "extra": {
         "branch-alias": {
