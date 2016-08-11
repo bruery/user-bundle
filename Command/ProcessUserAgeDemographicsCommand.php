@@ -47,7 +47,7 @@ EOT
 
         $context = $input->getArgument('context');
 
-        if ($input->getOption('no-confirmation') || $dialog->askConfirmation($output, 'Confirm user age demographics processing?', false)) {
+        if ($input->getOption('no-confirmation') || $dialog->askConfirmation($output, 'Confirm user age demographics processing?', true)) {
             $output->writeln(array(
                     '',
                     '<info>Start processing user age demographics!</info>',
