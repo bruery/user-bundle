@@ -259,6 +259,10 @@
                 <source>block_age_demographics_y_axis_label</source>
                 <target>User Count</target>
             </trans-unit>
+            <trans-unit id="user_member_since">
+                <source>user_member_since</source>
+                <target>Member since</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
