@@ -34,7 +34,9 @@ class BrueryUserExtension extends Extension
         $loader->load(sprintf('%s.xml', $config['manager_type']));
 
         $this->configureClass($config, $container);
-        $loader->load('user_helper.xml');
+        if ($config['user_age_demographics']['enabled']) {
+            $loader->load('user_helper.xml');
+        }
 
         $this->aliasManagers($container, $config['manager_type']);
         $this->configureTemplates($config, $container);
@@ -65,6 +67,8 @@ class BrueryUserExtension extends Extension
             $this->configureUserAgeDemographics($config, $container);
         }
 
+        $container->setParameter('bruery.user.user_age_demographics.enabled',   $config['user_age_demographics']['enabled']);
+
         $loader->load('validators.xml');
         $loader->load('form_change_password.xml');
         $this->configureChangePassword($config, $container);
@@ -79,14 +83,16 @@ class BrueryUserExtension extends Extension
         $loader->load('seo_block.xml');
         $loader->load('mailer.xml');
         $loader->load('user_gender_block.xml');
-        $loader->load('user_helper.xml');
 
         $this->registerDoctrineMapping($config);
     }
 
     protected function configureClass(array $config, ContainerBuilder $container)
     {
-        $container->setParameter('bruery.user.user_helper.class',           $config['user']['class']['helper']);
+
+        if ($config['user_age_demographics']['enabled']) {
+            $container->setParameter('bruery.user.user_helper.class', $config['user']['class']['helper']);
+        }
         $container->setParameter('bruery.user.block.profile_gender.class',  $config['user']['block']['class']['gender']);
     }
 
@@ -146,8 +152,6 @@ class BrueryUserExtension extends Extension
 
     public function configureUserAgeDemographics(array $config, ContainerBuilder $container)
     {
-        $container->setParameter('bruery.user.user_age_demographics.enabled',                 $config['user_age_demographics']['enabled']);
-
         $container->setParameter('bruery.user.manager.user_age_demographics.class',           $config['user_age_demographics']['class']['orm']);
         $container->setParameter('bruery.user.manager.user_age_demographics.entity',          $config['user_age_demographics']['class']['entity']);
         $container->setParameter('bruery.user.provider.collection.age_demographics.class',    $config['user_age_demographics']['provider']['class']);
@@ -202,7 +206,7 @@ class BrueryUserExtension extends Extension
     {
         $collector = DoctrineCollector::getInstance();
 
-        if (class_exists($config['user_age_demographics']['class']['entity'])) {
+        if ($config['user_age_demographics']['enabled'] && class_exists($config['user_age_demographics']['class']['entity'])) {
             $collector->addAssociation($config['user_age_demographics']['class']['entity'], 'mapOneToOne', array(
                 'fieldName'    => 'user',
                 'targetEntity' => $config['user']['class']['entity'],
@@ -224,7 +228,7 @@ class BrueryUserExtension extends Extension
             ));
         }
 
-        if (class_exists($config['user_age_demographics']['class']['entity'])) {
+        if ($config['user_age_demographics']['enabled'] && class_exists($config['user_age_demographics']['class']['entity'])) {
             $collector->addAssociation($config['user_age_demographics']['class']['entity'], 'mapManyToOne', array(
                 'fieldName' => 'collection',
                 'targetEntity' => $config['user_age_demographics']['class']['reference_entity'],
@@ -245,28 +249,27 @@ class BrueryUserExtension extends Extension
             ));
         }
 
-        if (interface_exists('Sonata\ClassificationBundle\Model\CollectionInterface')) {
-            if (class_exists($config['user_authentication_logs']['class']['entity']) && $config['user_authentication_logs']['enabled']) {
-                $collector->addAssociation($config['user_authentication_logs']['class']['entity'], 'mapManyToOne', array(
-                    'fieldName' => 'user',
-                    'targetEntity' => $config['user']['class']['entity'],
-                    'cascade' =>
+
+        if (class_exists($config['user_authentication_logs']['class']['entity']) && $config['user_authentication_logs']['enabled']) {
+            $collector->addAssociation($config['user_authentication_logs']['class']['entity'], 'mapManyToOne', array(
+                'fieldName' => 'user',
+                'targetEntity' => $config['user']['class']['entity'],
+                'cascade' =>
+                    array(
+                        1 => 'detach',
+                    ),
+                'mappedBy' => null,
+                'inversedBy' => null,
+                'joinColumns' =>
+                    array(
                         array(
-                            1 => 'detach',
+                            'name' => 'user_id',
+                            'referencedColumnName' => 'id',
+                            'onDelete' => 'CASCADE',
                         ),
-                    'mappedBy' => null,
-                    'inversedBy' => null,
-                    'joinColumns' =>
-                        array(
-                            array(
-                                'name' => 'user_id',
-                                'referencedColumnName' => 'id',
-                                'onDelete' => 'CASCADE',
-                            ),
-                        ),
-                    'orphanRemoval' => false,
-                ));
-            }
+                    ),
+                'orphanRemoval' => false,
+            ));
         }
     }
 }

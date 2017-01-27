@@ -162,7 +162,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('user_age_demographics')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->scalarNode('enabled')->defaultValue(true)->end()
+                        ->scalarNode('enabled')->defaultValue(false)->end()
                         ->arrayNode('block')
                             ->addDefaultsIfNotSet()
                             ->children()

@@ -23,19 +23,19 @@ class ProcessUserAgeDemographicsCommand extends BaseCommand
      */
     public function configure()
     {
-        $this->setName('bruery:user:process-user-age-demographics')
-            ->setDefinition(
-                new InputDefinition(array(
-                    new InputArgument('context', InputArgument::REQUIRED),
-                ))
-            );
-        $this->addOption('no-confirmation', null, InputOption::VALUE_OPTIONAL, 'Ask confirmation before processing age demographics', false);
-        $this->setDescription('Process user age demographics');
+            $this->setName('bruery:user:process-user-age-demographics')
+                ->setDefinition(
+                    new InputDefinition(array(
+                        new InputArgument('context', InputArgument::REQUIRED),
+                    ))
+                );
+            $this->addOption('no-confirmation', null, InputOption::VALUE_OPTIONAL, 'Ask confirmation before processing age demographics', false);
+            $this->setDescription('Process user age demographics');
 
-        $this->setHelp(<<<EOT
+            $this->setHelp(<<<EOT
 The <info>bruery:user:process-user-age-demographics</info> command to process user age demographics.
 EOT
-        );
+            );
     }
 
     /**
@@ -43,35 +43,39 @@ EOT
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $dialog = $this->getHelperSet()->get('dialog');
+        if ($this->getContainer()->getParameter('bruery.user.user_age_demographics.enabled')) {
+            $dialog = $this->getHelperSet()->get('dialog');
 
-        $context = $input->getArgument('context');
+            $context = $input->getArgument('context');
 
-        if ($input->getOption('no-confirmation') || $dialog->askConfirmation($output, 'Confirm user age demographics processing?', true)) {
-            $output->writeln(array(
+            if ($input->getOption('no-confirmation') || $dialog->askConfirmation($output, 'Confirm user age demographics processing?', true)) {
+                $output->writeln(array(
                     '',
                     '<info>Start processing user age demographics!</info>',
                     ''));
-            $users = $this->getUserManager()->findAll();
+                $users = $this->getUserManager()->findAll();
 
-            if (count($users) > 0) {
-                foreach ($users as $user) {
-                    if ($user->getDateOfBirth()) {
-                        $age = $this->getAge($user->getDateOfBirth());
-                        if ($ageBracket = $this->getUserHelper()->getAgeBracket($age, $context)) {
-                            if (!$ageDemographics = $this->getUserAgeDemographicsManager()->findOneBy(array('user'=>$user))) {
-                                $this->create($user, $ageBracket);
-                            } else {
-                                $this->update($ageDemographics, $ageBracket);
+                if (count($users) > 0) {
+                    foreach ($users as $user) {
+                        if ($user->getDateOfBirth()) {
+                            $age = $this->getAge($user->getDateOfBirth());
+                            if ($ageBracket = $this->getUserHelper()->getAgeBracket($age, $context)) {
+                                if (!$ageDemographics = $this->getUserAgeDemographicsManager()->findOneBy(array('user'=>$user))) {
+                                    $this->create($user, $ageBracket);
+                                } else {
+                                    $this->update($ageDemographics, $ageBracket);
+                                }
                             }
                         }
                     }
+                } else {
+                    $output->writeln('<error>No User found!</error>');
                 }
             } else {
-                $output->writeln('<error>No User found!</error>');
+                $output->writeln('<error>Age demographics processing cancelled !</error>');
             }
         } else {
-            $output->writeln('<error>Age demographics processing cancelled !</error>');
+            $output->writeln('<error>Age demographics not available !</error>');
         }
     }
 
