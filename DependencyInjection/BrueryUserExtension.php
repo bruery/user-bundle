@@ -47,8 +47,13 @@ class BrueryUserExtension extends Extension
         if ($config['password_expire']['enabled']) {
             $loader->load('password_expire.xml');
             $this->configurePasswordExpire($config, $container);
-            //load listeners
-            $loader->load('password_expire_listener.xml');
+            // BC Implementation
+            if (interface_exists('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface') &&
+                interface_exists('Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface')) {
+                $loader->load('password_expiration_listener.xml');
+            } else {
+                $loader->load('password_expire_listener.xml');
+            }
         }
 
         if ($config['user_authentication_logs']['enabled']) {

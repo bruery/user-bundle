@@ -1,16 +1,14 @@
 <?php
 /**
- * This file is part of the Bruery Platform.
+ * This file is part of the Mosaic Platform.
  *
- * (c) Viktore Zara <viktore.zara@gmail.com>
- * (c) Mell Zamora <mellzamora@outlook.com>
+ * (c) Rommel M. Zamora <rommel.zamora@groupm.com>
+ * (c) Andrew Aculana <andrew.aculana@movent.com>
  *
- * Copyright (c) 2016. For the full copyright and license information, please view the LICENSE  file that was distributed with this source code.
+ * Copyright (c)  2017. For the full copyright and license information, please view the LICENSE  file that was distributed with this source code.
  */
 
 namespace Bruery\UserBundle\Event\Listener;
-
-@trigger_error('The '.__NAMESPACE__.'\ForcePasswordUpdateListener class is deprecated since version 1.0 and will be removed in 2.0. Use Bruery\UserBundle\Event\Listener\PasswordUpdateListener instead.', E_USER_DEPRECATED);
 
 use Bruery\UserBundle\Model\ConfigManagerInterface;
 use FOS\UserBundle\Model\UserInterface;
@@ -18,18 +16,22 @@ use Symfony\Cmf\Component\Routing\ChainRouter;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class ForcePasswordUpdateListener
+class PasswordUpdateListener
 {
-    protected $securityContext;
+
     protected $configManager;
     protected $session;
     protected $router;
+    protected  $tokenStorage;
+    protected  $authorizationChecker;
 
-    public function __construct(ChainRouter $router, SecurityContext $securityContext, Session $session, ConfigManagerInterface $configManager)
+    public function __construct(ChainRouter $router,TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker, Session $session, ConfigManagerInterface $configManager)
     {
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
+        $this->authorizationChecker = $authorizationChecker;
         $this->configManager = $configManager;
         $this->session = $session;
         $this->router = $router;
@@ -37,8 +39,9 @@ class ForcePasswordUpdateListener
 
     public function onCheckPasswordExpired(GetResponseEvent $event)
     {
-        if (($this->securityContext->getToken()) && ($this->securityContext->isGranted('IS_AUTHENTICATED_FULLY'))) {
-            $user = $this->securityContext->getToken()->getUser();
+
+        if ($this->tokenStorage->getToken() && $this->authorizationChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
+            $user = $this->tokenStorage->getToken()->getUser();
 
             if ($user instanceof UserInterface && $this->session->get('_bruery_user.password_expire.'.$user->getId()) === 'password_expire'   && $event->getRequest()->get('_route') != null && $event->getRequest()->get('_route') !== 'fos_user_change_password') {
                 $event->setResponse($this->getRedirectResponse());

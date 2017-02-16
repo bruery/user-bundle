@@ -11,6 +11,7 @@
 namespace Bruery\UserBundle;
 
 use Bruery\UserBundle\DependencyInjection\Compiler\TemplateCompilerPass;
+use Bruery\UserBundle\DependencyInjection\Compiler\OverrideServiceCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -22,5 +23,6 @@ class BrueryUserBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         $container->addCompilerPass(new TemplateCompilerPass());
+        $container->addCompilerPass(new OverrideServiceCompilerPass());
     }
 }
